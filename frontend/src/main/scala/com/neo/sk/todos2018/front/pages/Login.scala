@@ -18,20 +18,20 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * Date: 2019/3/26
   * Time: 17:40
   */
-object Login{
+object Login {
 
   val url = "#/" + "Login"
 
-  private def userLogin(): Unit ={
+  private def userLogin(): Unit = {
     val userName = dom.document.getElementById("userName").asInstanceOf[Input].value
     val password = dom.document.getElementById("userPassword").asInstanceOf[Input].value
-    Http.postJsonAndParse[SuccessRsp](Routes.Login.userLogin, UserLoginReq(userName, password).asJson.noSpaces).map{
+    Http.postJsonAndParse[SuccessRsp](Routes.Login.userLogin, UserLoginReq(userName, password).asJson.noSpaces).map {
       case Right(rsp) =>
-        if(rsp.errCode == 0){
+        if (rsp.errCode == 0) {
           JsFunc.alert("登陆成功")
           dom.window.location.hash = "/List"
         }
-        else{
+        else {
           JsFunc.alert(s"登陆失败：${rsp.msg}")
         }
       case Left(error) =>
@@ -39,19 +39,43 @@ object Login{
     }
   }
 
+  private def userRegisterIn(): Unit = {
+
+    //dom.window.location.hash = "/Register"
+//    val userName = dom.document.getElementById("userName").asInstanceOf[Input].value
+//    val password = dom.document.getElementById("userPassword").asInstanceOf[Input].value
+//    Http.postJsonAndParse[SuccessRsp](Routes.Login.userLogin, UserLoginReq(userName, password).asJson.noSpaces).map {
+//      case Right(rsp) =>
+//        if (rsp.errCode == 0) {
+          JsFunc.alert("进入注册页面")
+          dom.window.location.hash = "/Register"
+//        }
+//        else {
+//          JsFunc.alert(s"登陆失败：${rsp.msg}")
+//        }
+//      case Left(error) =>
+//        JsFunc.alert(s"parse error,$error")
+//    }
+
+  }
+//
+
+
   def app: Node =
     <div>
-      <div class = "LoginForm">
+      <div class="LoginForm">
         <h2>欢迎登陆</h2>
-        <div class = "inputContent">
+        <div class="inputContent">
           <span>用户名</span>
-          <input id = "userName"></input>
+          <input id="userName"></input>
         </div>
-        <div class = "inputContent">
+        <div class="inputContent">
           <span>密码</span>
-          <input id = "userPassword" type = "password"></input>
+          <input id="userPassword" type="password"></input>
         </div>
-        <button onclick = {()=> userLogin()}>登陆</button>
+        <button onclick={() => userLogin()}>登陆</button>
+        <button onclick={() => userRegisterIn()}>进入注册页面</button>
+
       </div>
     </div>
 }

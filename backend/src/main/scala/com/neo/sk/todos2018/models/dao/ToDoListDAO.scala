@@ -4,6 +4,8 @@ import org.slf4j.LoggerFactory
 import com.neo.sk.todos2018.utils.DBUtil.db
 import com.neo.sk.todos2018.models.SlickTables._
 import slick.jdbc.PostgresProfile.api._
+import sun.security.util.Password
+
 import scala.collection.mutable
 import scala.concurrent.Future
 
@@ -37,6 +39,39 @@ import scala.concurrent.Future
 object ToDoListDAO{
   private val log = LoggerFactory.getLogger(this.getClass)
 
+  def addAuthor(author: String, password: String,email: String): Future[Int] = {
+    try {
+      if (author.length == 0 ) {
+        log.error(s"empty author")
+        Future.successful(-1)
+      } else if (password.length == 0) {
+        log.error(s"empty password")
+        Future.successful(-1)
+      } else if (email.length == 0){
+        log.error(s"empty email")
+        Future.successful(-1)
+      } else {
+        db.run(tUserInfo.map(t => (t.author, t.password, t.email)) += (author, password, email))
+      }
+    } catch {
+      case e: Throwable =>
+        log.error(s"add record error with error $e")
+        Future.successful(-1)
+    }
+  }
+
+  def getAuthorList(author: String): Future[Seq[rUserInfo]] = {
+    try {
+      db.run(tUserInfo.filter(t => t.author === author).result)
+    } catch {
+      case e: Throwable =>
+        log.error(s"get AuthorList error with error $e")
+        Future.successful(Nil)
+    }
+  }
+
+
+
   def addRecord(author: String, content: String): Future[Int] = {
     try {
       if (author.length == 0 ) {
@@ -55,9 +90,15 @@ object ToDoListDAO{
     }
   }
 
+
+
+
   def delRecord(id: Int): Future[Int] = {
     try {
       // 待补充
+      db.run(tRecordInfo.filter(t =>t.id === id).delete)
+//      db.run(sql"""SELECT * FROM RECORD_INFO WHERE id = $id""".as)
+
       Future.successful(1)
     } catch {
       case e: Throwable =>

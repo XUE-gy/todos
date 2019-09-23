@@ -53,7 +53,7 @@ object TaskList{
     Http.postJsonAndParse[SuccessRsp](Routes.List.delRecord, data).map {
       case Right(rsp) =>
         if(rsp.errCode == 0) {
-          JsFunc.alert("执行成功！但是现在并没有进行删除操作。")
+          JsFunc.alert("删除成功！")
           getList
         } else {
           JsFunc.alert("删除失败！")

@@ -1,6 +1,6 @@
 #FileLock
-#Mon Sep 16 21:41:26 CST 2019
+#Mon Sep 23 23:29:31 CST 2019
 hostName=shinelon-PC
-id=16d3a4e8193b61cc36a842b27b19551e38cf3d244c7
+id=16d5ebdf11d96e4941d3e9399a6481107436a5446d8
 method=file
-server=10.128.192.172\:59311
+server=10.128.222.148\:9636

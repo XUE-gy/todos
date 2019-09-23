@@ -11,6 +11,12 @@ object Routes {
     val userLogin = baseUrl + "/userLogin"
     val userLogout = baseUrl + "/userLogout"
   }
+  object Register{
+    val baseUrl = base + "/register"
+    val userRegister = baseUrl + "/userRegister"
+    val userRegisterIn = baseUrl + "/userRegisterIn"
+    val userRegisterOut = baseUrl + "/userRegisterOut"
+  }
 
   object List {
     val baseUrl = base + "/list"

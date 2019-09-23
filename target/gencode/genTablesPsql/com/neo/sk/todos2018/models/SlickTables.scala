@@ -1,5 +1,4 @@
 package com.neo.sk.todos2018.models
-
 // AUTO-GENERATED Slick data model
 /** Stand-alone Slick data model for immediate use */
 object SlickTables extends {
@@ -20,15 +19,15 @@ trait SlickTables {
   def ddl = schema
 
   /** Entity class storing rows of table tRecordInfo
-    *  @param id Database column ID SqlType(INTEGER), AutoInc, PrimaryKey
-    *  @param author Database column AUTHOR SqlType(VARCHAR), Length(63,true)
-    *  @param content Database column CONTENT SqlType(VARCHAR), Length(1023,true)
-    *  @param time Database column TIME SqlType(BIGINT) */
+   *  @param id Database column ID SqlType(INTEGER), AutoInc, PrimaryKey
+   *  @param author Database column AUTHOR SqlType(VARCHAR), Length(63,true)
+   *  @param content Database column CONTENT SqlType(VARCHAR), Length(1023,true)
+   *  @param time Database column TIME SqlType(BIGINT) */
   case class rRecordInfo(id: Int, author: String, content: String, time: Long)
   /** GetResult implicit for fetching rRecordInfo objects using plain SQL queries */
   implicit def GetResultrRecordInfo(implicit e0: GR[Int], e1: GR[String], e2: GR[Long]): GR[rRecordInfo] = GR{
     prs => import prs._
-      rRecordInfo.tupled((<<[Int], <<[String], <<[String], <<[Long]))
+    rRecordInfo.tupled((<<[Int], <<[String], <<[String], <<[Long]))
   }
   /** Table description of table RECORD_INFO. Objects of this class serve as prototypes for rows in queries. */
   class tRecordInfo(_tableTag: Tag) extends profile.api.Table[rRecordInfo](_tableTag, "RECORD_INFO") {
@@ -49,15 +48,15 @@ trait SlickTables {
   lazy val tRecordInfo = new TableQuery(tag => new tRecordInfo(tag))
 
   /** Entity class storing rows of table tUserInfo
-    *  @param id Database column ID SqlType(INTEGER), AutoInc, PrimaryKey
-    *  @param author Database column AUTHOR SqlType(VARCHAR), Length(36,true)
-    *  @param password Database column PASSWORD SqlType(VARCHAR), Length(19,true)
-    *  @param email Database column EMAIL SqlType(VARCHAR), Length(31,true) */
+   *  @param id Database column ID SqlType(INTEGER), AutoInc, PrimaryKey
+   *  @param author Database column AUTHOR SqlType(VARCHAR), Length(36,true)
+   *  @param password Database column PASSWORD SqlType(VARCHAR), Length(19,true)
+   *  @param email Database column EMAIL SqlType(VARCHAR), Length(31,true) */
   case class rUserInfo(id: Int, author: String, password: String, email: String)
   /** GetResult implicit for fetching rUserInfo objects using plain SQL queries */
   implicit def GetResultrUserInfo(implicit e0: GR[Int], e1: GR[String]): GR[rUserInfo] = GR{
     prs => import prs._
-      rUserInfo.tupled((<<[Int], <<[String], <<[String], <<[String]))
+    rUserInfo.tupled((<<[Int], <<[String], <<[String], <<[String]))
   }
   /** Table description of table USER_INFO. Objects of this class serve as prototypes for rows in queries. */
   class tUserInfo(_tableTag: Tag) extends profile.api.Table[rUserInfo](_tableTag, "USER_INFO") {
