@@ -10,7 +10,7 @@ object RegisterProtocol {
   case class UserRegisterReq(
                            userName: String,
                            password: String,
-                           email :   String
+                           email :   String,
                          )
 
   case class UserRegisterRsp(

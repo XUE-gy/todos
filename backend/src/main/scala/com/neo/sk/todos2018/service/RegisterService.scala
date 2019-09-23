@@ -34,41 +34,45 @@ trait RegisterService extends ServiceUtils with SessionBase {
 
   private val userName = "test"
 
-  private val userRegister = (path("userRegister") & post){//to Register,then get into Login page
-    entity(as[Either[Error, UserRegisterReq]]){
+//  private val userRegister = (path("userRegister") & post){//to Register,then get into Login page
+//    entity(as[Either[Error, UserRegisterReq]]){
+//      case Left(error) =>
+//        log.warn(s"error in userRegister: $error")
+//        complete(parseError)
+//      case Right(req) =>
+//        if(req.userName == userName){
+//          val session = ToDoListSession(UserBaseInfo(req.userName), System.currentTimeMillis())
+//          addSession(session.toSessionMap){
+//            complete(SuccessRsp())
+//          }
+//        }
+//        else
+//          complete(ErrorRsp(10001, "用户名不正确"))
+//    }
+//  }
+
+  private val userRegister = (path("userRegister") & post){
+    entity(as[Either[Error, UserRegisterReq]]) {
       case Left(error) =>
         log.warn(s"error in userLogin: $error")
         complete(parseError)
       case Right(req) =>
-        if(req.userName == userName){
-          val session = ToDoListSession(UserBaseInfo(req.userName), System.currentTimeMillis())
-          addSession(session.toSessionMap){
-            complete(SuccessRsp())
+        dealFutureResult {
+          ToDoListDAO.getAuthorList(req.userName).map { list =>
+            if (list == Vector()) {
+              if(req.password == ""){complete(ErrorRsp(10001, "没有输入密码，不能注册"))}
+              else if(req.email == ""){complete(ErrorRsp(10001, "没有输入邮箱，不能注册"))}
+              else{
+                ToDoListDAO.addAuthor(req.userName,req.password,req.email)
+//                println("req.userName="+req.userName+"req.password="+req.password)
+                complete(SuccessRsp())
+              }
+            }
+            else {/*println(list);*/complete(ErrorRsp(10001, "数据库已有用户，不能注册"))}
           }
         }
-        else
-          complete(ErrorRsp(10001, "用户名不正确"))
     }
   }
-
-//  private val userRegister = (path("userRegister") & post){
-//    entity(as[Either[Error, UserRegisterReq]]) {
-//      case Left(error) =>
-//        log.warn(s"error in userLogin: $error")
-//        complete(parseError)
-//      case Right(req) =>
-//        dealFutureResult {
-//          ToDoListDAO.getAuthorList(req.userName).map { list =>
-//            if (list != Vector()) {
-//              ToDoListDAO.addAuthor(req.userName,req.password,req.email)
-//              complete(SuccessRsp())
-//            }
-//            else {complete(ErrorRsp(10001, "数据库已有用户，不能注册"))}
-//
-//          }
-//        }
-//    }
-//  }
 
 
 

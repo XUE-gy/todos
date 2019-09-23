@@ -47,14 +47,15 @@ object Register{
   private def userRegister(): Unit = {
     val userName = dom.document.getElementById("userName").asInstanceOf[Input].value
     val password = dom.document.getElementById("userPassword").asInstanceOf[Input].value
-    Http.postJsonAndParse[SuccessRsp](Routes.Login.userLogin, UserLoginReq(userName, password).asJson.noSpaces).map {
+    val email = dom.document.getElementById("userEmail").asInstanceOf[Input].value
+    Http.postJsonAndParse[SuccessRsp](Routes.Register.userRegister, UserRegisterReq(userName, password, email).asJson.noSpaces).map {
       case Right(rsp) =>
         if (rsp.errCode == 0) {
-          JsFunc.alert("登陆成功")
-          dom.window.location.hash = "/List"
+          JsFunc.alert("注册成功")
+          dom.window.location.hash = "/Login"
         }
         else {
-          JsFunc.alert(s"登陆失败：${rsp.msg}")
+          JsFunc.alert(s"注册失败：${rsp.msg}")
         }
       case Left(error) =>
         JsFunc.alert(s"parse error,$error")
@@ -86,6 +87,7 @@ object Register{
           <input id = "userPassword" type = "password"></input>
         </div>
         <div class = "inputContent">
+          <span>邮箱</span>
           <input id = "userEmail"></input>
         </div>
         <button onclick = {()=> userRegister()}>注册</button>
