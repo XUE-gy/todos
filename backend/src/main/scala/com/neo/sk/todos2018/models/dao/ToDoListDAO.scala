@@ -72,6 +72,8 @@ object ToDoListDAO{
 
 
 
+
+
   def addRecord(author: String, content: String): Future[Int] = {
     try {
       if (author.length == 0 ) {
@@ -107,13 +109,59 @@ object ToDoListDAO{
     }
   }
 
-  def getRecordList(author: String): Future[Seq[rRecordInfo]] = {
+  def getRecordList(author: String): Future[Seq[rRecordInfo]] = {//获取了相应author的博客
     try {
       db.run(tRecordInfo.filter(t => t.author === author).result)
     } catch {
       case e: Throwable =>
         log.error(s"get recordList error with error $e")
         Future.successful(Nil)
+    }
+  }
+  def getCommentList(id : Int): Future[Seq[rCommentInfo]] = {//获取了相应id博客的评论
+    try {
+      db.run(tCommentInfo.filter(t => t.contentId === id).result)
+
+
+    } catch {
+      case e: Throwable =>
+        log.error(s"get recordList error with error $e")
+        Future.successful(Nil)
+    }
+  }
+
+
+
+  def delComment(id: Int): Future[Int] = {
+    try {
+      // 待补充
+      db.run(tCommentInfo.filter(t =>t.id === id).delete)
+      //      db.run(sql"""SELECT * FROM RECORD_INFO WHERE id = $id""".as)
+
+      Future.successful(1)
+    } catch {
+      case e: Throwable =>
+        log.error(s"del record error with error $e")
+        Future.successful(-1)
+    }
+  }
+
+
+  def addComment(id : Int,author: String, content: String): Future[Int] = {
+    try {
+      if (author.length == 0 ) {
+        log.error(s"empty author")
+        Future.successful(-1)
+      } else if (content.length == 0) {
+        log.error(s"empty content")
+        Future.successful(-1)
+      } else {
+        db.run(tCommentInfo.map(t => (t.contentId, t.commentator,t.comment)) += (id,author,content))
+      }
+    } catch {
+      case e: Throwable =>
+        log.error(s"add record error with error $e")
+        Future.successful(-1)
     }
   }
 

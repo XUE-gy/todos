@@ -57,8 +57,39 @@
   可以参考backend\src\main\scala\com\neo\sk\todos2018\utils\SessionSupport.scala里的函数添加删除session。
   使用SessionBase.scala的userAuth函数检验session。
   
-  
-  
+## session实现流程
+
+  首先从网页入手，在login登陆时传入session，在退出TaskLists时销毁session
+  详细流程（前端->后端->前端）：    login.scala: Http.postJsonAndParse[SuccessRsp](Routes.Login.userLogin, UserLoginReq(userName, password).asJson.noSpaces).map {}传入
+                                  Routes中定义的userLogin通过path传回loginservice
+                                  最重要的是Loginprotocol.scala中的UserLoginReq连接了login和loginservice，将登陆时的username和password返回到后端，接着后续session处理
+                                  loginservice.scala: val session = ToDoListSession(UserBaseInfo(req.userName), System.currentTimeMillis())传入session
+                                  sessionbase：toSessionMap设定了session传入值，接收到session
+                                  sessionbase：userAuth将session传出
+                                  todolistservice：userAuth得到session，将其返回前端
+                                  tasklist：通过taskList := rsp.list.get获取session传来的数据库的list，退出时用taskList := Nil消除
+                                  tasklist:而session的消除是通过logout中的Routes.Login.userLogout传到routes再传到loginservice中的userLogout，使用removesession消除
+   
+## tasklist可以实现删除同一行数据的流程（也可用于接收数据传入session携带进入visit页面）
+   tasklist中getDeleteButton（按钮）调用deleteRecord再在其中传(Routes.List.delRecord, data)data是文本的id
+   id在前端<div>中用getDeleteButton(l.id)传入
+   data=DelRecordReq(id)..  DelRecordReq是todolist中的DelRecordReq，它连接了前后端，传入id并在数据库进行删除
+         
+## 查看评论区的方法
+   获取id，传入session，在另一界面通过session获取数据库所需数据，返回页面
+   
+   
+## 已有：获取用户名和密码与数据库比对（类推）
+
+## 已有：直接根据session获取用户的博客list
+         
+## 目的：获取id与数据库比对，并返回属于id的数据表
+
+
+## 前端函数名改完，改post或get中的route，再加route中的路径，再加HttpService中的路径，再加后端最后的Route路径，再调用路径中函数
+
+
+
 ## 参考链接
 * [scala-js](http://www.scala-js.org/doc/tutorial/basic/)
 * [akka-http](https://doc.akka.io/docs/akka-http/current/introduction.html)

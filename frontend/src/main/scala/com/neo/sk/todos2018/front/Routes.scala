@@ -25,4 +25,17 @@ object Routes {
     val delRecord = baseUrl + "/delRecord"
   }
 
+  object Visit {
+    val baseUrl = base + "/visit"
+    val getList = baseUrl + "/getList"
+    val addComment = baseUrl + "/addComment"
+    val delComment = baseUrl + "/delComment"
+  }
+  object Comment {
+    val baseUrl = base + "/comment"
+    val getList = baseUrl + "/getList"
+    val addComment = baseUrl + "/addComment"
+    val delComment = baseUrl + "/delComment"
+  }
+
 }

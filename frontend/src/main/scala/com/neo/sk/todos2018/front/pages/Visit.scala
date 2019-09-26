@@ -14,18 +14,17 @@ import org.scalajs.dom.html.Input
 
 import scala.concurrent.ExecutionContext.Implicits.global
 /**
-  * Created by haoshuhan on 2018/6/4.
-  * changed by Xu Si-ran on 2019/3/21
-  * update by zhangtao, 2019-3-23: record id.
+  * Created by XueGanYuan on 2019/9/24.
+  *
+  *
   */
-object TaskList{
+object Visit{
 
-  val url = "#/" + "List"
+  val url = "#/" + "Visit"
 
   val taskList = Var(List.empty[TaskRecord])
 
   def getDeleteButton(id: Int) =  <button class={deleteButton.htmlClass} onclick={()=>deleteRecord(id)}>删除</button>
-  def getCommentButton(id: Int) =  <button class={commentButton.htmlClass} onclick={()=>commentRecord(id)}>查看评论</button>
 
   def addRecord: Unit = {
     val data = dom.document.getElementById("taskInput").asInstanceOf[Input].value
@@ -65,11 +64,6 @@ object TaskList{
         println(s"parse error,$error")
     }
   }
-  def commentRecord(id: Int): Unit = {
-    JsFunc.alert("进入评论区")
-    dom.window.location.hash = s"/Comment," + id
-
-  }
 
   def getList: Unit = {
     Http.getAndParse[GetListRsp](Routes.List.getList).map {
@@ -94,15 +88,12 @@ object TaskList{
           <th class={th.htmlClass}>任务</th>
           <th class={th.htmlClass}>创建时间</th>
           <th class={th.htmlClass}>操作</th>
-          <th class={th.htmlClass}>评论</th>
-
         </tr>
         {list.map {l =>
         <tr>
           <td class={td.htmlClass}>{l.content}</td>
           <td class={td.htmlClass}>{TimeTool.dateFormatDefault(l.time)}</td>
           <td class={td.htmlClass}>{getDeleteButton(l.id)}</td>
-          <td class={td.htmlClass}>{getCommentButton(l.id)}</td>
         </tr>
       }
         }
@@ -128,24 +119,25 @@ object TaskList{
     }
   }
 
-  def visitIn(): Unit = {
-          JsFunc.alert("查看其他用户")
-          dom.window.location.hash = "/Visit"
+  def returnMyPage(): Unit = {
+    JsFunc.alert("返回个人页面")
+    dom.window.location.hash = "/List"
   }
 
+
+
   def app: xml.Node = {
-   getList
-  <div>
+    getList
     <div>
-      <button class={visitInButton.htmlClass} onclick={()=>visitIn()}>查看其他用户</button>
-      <button class={logoutButton.htmlClass} onclick={()=>logout()}>退出</button></div>
-    <div style="margin:30px;font-size:25px;">任务记录</div>
-    <div style="margin-left:30px;">
-      <input id ="taskInput" class={input.htmlClass}></input>
-    <button class={addButton.htmlClass} onclick={()=>addRecord}>+添加</button>
+      <div>
+        <button class={logoutButton.htmlClass} onclick={()=>returnMyPage()}>个人页面</button></div>
+      <div style="margin:30px;font-size:25px;">任务记录</div>
+      <div style="margin-left:30px;">
+        <input id ="taskInput" class={input.htmlClass}></input>
+        <button class={addButton.htmlClass} onclick={()=>addRecord}>+添加</button>
+      </div>
+      {taskListRx}
     </div>
-    {taskListRx}
-  </div>
   }
 
 }

@@ -9,4 +9,7 @@ object UserProtocol {
   case class UserBaseInfo(
                          userName:String
                          )
+  case class UserCommentInfo(
+                           id:Int
+                         )
 }

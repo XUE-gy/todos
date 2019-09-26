@@ -31,17 +31,21 @@ object SessionBase{
     }
 
     case class ToDoListSession(
-                                userInfo:UserBaseInfo,
-                                time: Long
+                                userInfo: UserBaseInfo,
+                                time: Long,
+//                                id: Int
                            ) {
       def toSessionMap: Map[String, String] = {
         Map(
           SessionTypeKey -> SessionKeys.sessionType,
           SessionKeys.name -> userInfo.userName,
-          SessionKeys.timestamp -> time.toString
+          SessionKeys.timestamp -> time.toString,
+
         )
       }
     }
+
+
 }
 
 trait SessionBase extends SessionSupport with ServiceUtils{

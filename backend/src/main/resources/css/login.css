@@ -34,3 +34,10 @@
     border-radius: 10px;
     font-size: 17px;
 }
+
+.css2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 8em;
+}

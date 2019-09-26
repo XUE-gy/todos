@@ -18,7 +18,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * changed by Xu Si-ran on 2019/3/21
   * update by zhangtao, 2019-3-23: record id.
   */
-object TaskList{
+object Recent{
 
   val url = "#/" + "List"
 
@@ -93,8 +93,10 @@ object TaskList{
         <tr>
           <th class={th.htmlClass}>任务</th>
           <th class={th.htmlClass}>创建时间</th>
-          <th class={th.htmlClass}>操作</th>
+          <th class={th.htmlClass}>点赞数</th>
           <th class={th.htmlClass}>评论</th>
+          <th class={th.htmlClass}>点赞</th>
+          <th class={th.htmlClass}>关注</th>
 
         </tr>
         {list.map {l =>
@@ -129,23 +131,23 @@ object TaskList{
   }
 
   def visitIn(): Unit = {
-          JsFunc.alert("查看其他用户")
-          dom.window.location.hash = "/Visit"
+    JsFunc.alert("查看其他用户")
+    dom.window.location.hash = "/Visit"
   }
 
   def app: xml.Node = {
-   getList
-  <div>
+    getList
     <div>
-      <button class={visitInButton.htmlClass} onclick={()=>visitIn()}>查看其他用户</button>
-      <button class={logoutButton.htmlClass} onclick={()=>logout()}>退出</button></div>
-    <div style="margin:30px;font-size:25px;">任务记录</div>
-    <div style="margin-left:30px;">
-      <input id ="taskInput" class={input.htmlClass}></input>
-    <button class={addButton.htmlClass} onclick={()=>addRecord}>+添加</button>
+      <div>
+        <button class={visitInButton.htmlClass} onclick={()=>visitIn()}>查看其他用户</button>
+        <button class={logoutButton.htmlClass} onclick={()=>logout()}>退出</button></div>
+      <div style="margin:30px;font-size:25px;">任务记录</div>
+      <div style="margin-left:30px;">
+        <input id ="taskInput" class={input.htmlClass}></input>
+        <button class={addButton.htmlClass} onclick={()=>addRecord}>+添加</button>
+      </div>
+      {taskListRx}
     </div>
-    {taskListRx}
-  </div>
   }
 
 }

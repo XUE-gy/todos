@@ -15,6 +15,8 @@ object ToDoListProtocol {
   case class AddRecordReq(content: String)
 
   case class DelRecordReq(id: Int)
+//  获得评论id
+//  case class CommentRecordReq(id: Int)
 
   //获得列表
   case class TaskRecord(

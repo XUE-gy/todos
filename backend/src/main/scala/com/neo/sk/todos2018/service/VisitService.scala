@@ -19,7 +19,7 @@ import scala.language.postfixOps
   * Time: 15:41
   * 2019/3/21 delete session check
   */
-trait ToDoListService extends ServiceUtils with SessionBase {
+trait VisitService extends ServiceUtils with SessionBase {
 
   import io.circe._
   import io.circe.generic.auto._
@@ -29,7 +29,6 @@ trait ToDoListService extends ServiceUtils with SessionBase {
   implicit val scheduler: Scheduler
 
   private val log = LoggerFactory.getLogger(getClass)
-
 
   private val addRecord = (path("addRecord") & post) {
     userAuth{ user =>
@@ -68,7 +67,6 @@ trait ToDoListService extends ServiceUtils with SessionBase {
                 complete(SuccessRsp())
               } else {
                 complete(ErrorRsp(1000101, "add record error"))
-
               }
             }
           }
@@ -86,29 +84,6 @@ trait ToDoListService extends ServiceUtils with SessionBase {
       )
     }
   }
-
-
-//  private val commentRecord = (path("commentRecord") & post){
-//
-//    entity(as[Either[Error, CommentRecordReq]]) {
-//      case Left(error) =>
-//        log.warn(s"error in userLogin: $error")
-//        complete(parseError)
-//      case Right(req) =>
-//        dealFutureResult {
-//          ToDoListDAO.getCommentList(req.id).map { list =>
-////            if (list == Vector()) complete(ErrorRsp(10001, "该用户不存在"))
-////            else if(list(0).id != req.id){complete(ErrorRsp(10001, "密码不正确"))}
-////            else{
-//              val session = ToDoListSession(UserBaseInfo(req.userName), System.currentTimeMillis())
-//              addSession(session.toSessionMap) {
-//                complete(SuccessRsp())
-//              }
-////            }
-//          }
-//        }
-//    }
-//  }
 
   val listRoutes: Route =
     pathPrefix("list") {

@@ -40,6 +40,7 @@ object Login {
   }
 
   private def userRegisterIn(): Unit = {
+    
 
     //dom.window.location.hash = "/Register"
 //    val userName = dom.document.getElementById("userName").asInstanceOf[Input].value

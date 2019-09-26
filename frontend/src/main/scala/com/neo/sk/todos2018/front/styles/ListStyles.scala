@@ -33,6 +33,24 @@ object ListStyles extends StyleSheet.Inline{
     borderRadius(5 px),
     fontSize(15 px)
   )
+  val commentButton = style(
+    width(100 px),
+    height(30 px),
+    borderRadius(5 px),
+    fontSize(15 px)
+  )
 
-  val logoutButton = addButton + style(float.right, marginRight(5.%%))
+  val visitInButton = style(
+    width(150 px),
+    height(38 px),
+    borderRadius(5 px),
+    fontSize(17 px),
+    float.right,
+    marginLeft(5.%%)
+  )
+
+
+//  val visitInButton = addButton + style(float.right, marginRight(5.%%))
+  val logoutButton = addButton + style(float.right, marginLeft(10.%%))
+
 }
