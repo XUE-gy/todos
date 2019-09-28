@@ -80,7 +80,7 @@ trait ToDoListService extends ServiceUtils with SessionBase {
     userAuth{ user =>
       dealFutureResult(
         ToDoListDAO.getRecordList(user.userName).map { list =>
-          val data = list.map( r => TaskRecord(r.id, r.content, r.time)).toList
+          val data = list.map( r => TaskRecord(r.id, r.content, r.time,r.like)).toList
           complete(GetListRsp(Some(data)))
         }
       )

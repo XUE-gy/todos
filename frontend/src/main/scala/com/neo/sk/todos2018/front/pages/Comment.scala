@@ -81,7 +81,7 @@ case class Comment(contentId : Int){
 //    }
 //  }
 
-  def getList: Unit = {JsFunc.alert("获取评论区")
+  def getList: Unit = {
     Http.postJsonAndParse[GetListRsp](Routes.Comment.getList, getCommentReq(contentId).asJson.noSpaces).map {
       case Right(rsp) =>
         if(rsp.errCode == 0){
@@ -144,7 +144,7 @@ case class Comment(contentId : Int){
 //  }
 
   def commentOut(): Unit = {
-    JsFunc.alert("退出评论区")
+    JsFunc.alert("返回到我的主页")
     dom.window.location.hash = "/List"
   }
 
@@ -152,7 +152,7 @@ case class Comment(contentId : Int){
     getList
     <div>
       <div>
-        <button class={visitInButton.htmlClass} onclick={()=>commentOut()}>退出评论区</button></div>
+        <button class={visitInButton.htmlClass} onclick={()=>commentOut()}>返回个人主页</button></div>
       <div style="margin:30px;font-size:25px;">评论区</div>
       <div style="margin-left:30px;">
         <input id ="commentInput" class={input.htmlClass}></input>

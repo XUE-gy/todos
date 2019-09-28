@@ -14,6 +14,8 @@ trait HttpService extends ResourceService
   with RegisterService
   with ToDoListService
   with CommentService
+  with RecentService
+  with VisitService
 {
 
   implicit val system: ActorSystem
@@ -33,7 +35,7 @@ trait HttpService extends ResourceService
         pathEndOrSingleSlash {
           getFromResource("html/index.html")
         } ~
-          resourceRoutes ~ loginRoutes ~ registerRoutes ~ listRoutes ~ commentRoutes
+          resourceRoutes ~ loginRoutes ~ registerRoutes ~ listRoutes ~ commentRoutes ~ recentRoutes ~ visitRoutes
       }
     }
 

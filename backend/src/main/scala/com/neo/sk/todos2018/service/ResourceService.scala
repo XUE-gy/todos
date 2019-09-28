@@ -39,6 +39,12 @@ trait ResourceService {
     pathPrefix("js") {
       getFromResourceDirectory("js")
     } ~
+      pathPrefix("fonts") {
+        getFromResourceDirectory("fonts")
+      } ~
+      pathPrefix("icons") {
+        getFromResourceDirectory("icons")
+      } ~
     pathPrefix("sjsout") {
       getFromResourceDirectory("sjsout")
     } ~

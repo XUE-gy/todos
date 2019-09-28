@@ -27,6 +27,7 @@ object Routes {
 
   object Visit {
     val baseUrl = base + "/visit"
+    val getFollowList = baseUrl + "/getFollowList"
     val getList = baseUrl + "/getList"
     val addComment = baseUrl + "/addComment"
     val delComment = baseUrl + "/delComment"
@@ -36,6 +37,14 @@ object Routes {
     val getList = baseUrl + "/getList"
     val addComment = baseUrl + "/addComment"
     val delComment = baseUrl + "/delComment"
+  }
+
+  object Recent {
+    val baseUrl = base + "/recent"
+    val getRecentList = baseUrl + "/getRecentList"
+    val addFollow = baseUrl + "/addFollow"
+    val addLike = baseUrl + "/addLike"
+
   }
 
 }

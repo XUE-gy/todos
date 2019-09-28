@@ -15,7 +15,7 @@ trait SlickTables {
   import slick.jdbc.{GetResult => GR}
 
   /** DDL for all tables. Call .create to execute. */
-  lazy val schema: profile.SchemaDescription = tCommentInfo.schema ++ tRecordInfo.schema ++ tUserInfo.schema
+  lazy val schema: profile.SchemaDescription = tCommentInfo.schema ++ tFollowInfo.schema ++ tRecordInfo.schema ++ tUserInfo.schema
   @deprecated("Use .schema instead of .ddl", "3.0")
   def ddl = schema
 
@@ -48,22 +48,49 @@ trait SlickTables {
   /** Collection-like TableQuery object for table tCommentInfo */
   lazy val tCommentInfo = new TableQuery(tag => new tCommentInfo(tag))
 
+  /** Entity class storing rows of table tFollowInfo
+    *  @param follower Database column FOLLOWER SqlType(VARCHAR), Length(63,true)
+    *  @param followed Database column FOLLOWED SqlType(VARCHAR), Length(63,true)
+    *  @param id Database column ID SqlType(INTEGER), AutoInc, PrimaryKey */
+  case class rFollowInfo(follower: String, followed: String, id: Int)
+  /** GetResult implicit for fetching rFollowInfo objects using plain SQL queries */
+  implicit def GetResultrFollowInfo(implicit e0: GR[String], e1: GR[Int]): GR[rFollowInfo] = GR{
+    prs => import prs._
+      rFollowInfo.tupled((<<[String], <<[String], <<[Int]))
+  }
+  /** Table description of table FOLLOW_INFO. Objects of this class serve as prototypes for rows in queries. */
+  class tFollowInfo(_tableTag: Tag) extends profile.api.Table[rFollowInfo](_tableTag, "FOLLOW_INFO") {
+    def * = (follower, followed, id) <> (rFollowInfo.tupled, rFollowInfo.unapply)
+    /** Maps whole row to an option. Useful for outer joins. */
+    def ? = ((Rep.Some(follower), Rep.Some(followed), Rep.Some(id))).shaped.<>({r=>import r._; _1.map(_=> rFollowInfo.tupled((_1.get, _2.get, _3.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+
+    /** Database column FOLLOWER SqlType(VARCHAR), Length(63,true) */
+    val follower: Rep[String] = column[String]("FOLLOWER", O.Length(63,varying=true))
+    /** Database column FOLLOWED SqlType(VARCHAR), Length(63,true) */
+    val followed: Rep[String] = column[String]("FOLLOWED", O.Length(63,varying=true))
+    /** Database column ID SqlType(INTEGER), AutoInc, PrimaryKey */
+    val id: Rep[Int] = column[Int]("ID", O.AutoInc, O.PrimaryKey)
+  }
+  /** Collection-like TableQuery object for table tFollowInfo */
+  lazy val tFollowInfo = new TableQuery(tag => new tFollowInfo(tag))
+
   /** Entity class storing rows of table tRecordInfo
     *  @param id Database column ID SqlType(INTEGER), AutoInc, PrimaryKey
     *  @param author Database column AUTHOR SqlType(VARCHAR), Length(63,true)
     *  @param content Database column CONTENT SqlType(VARCHAR), Length(1023,true)
-    *  @param time Database column TIME SqlType(BIGINT) */
-  case class rRecordInfo(id: Int, author: String, content: String, time: Long)
+    *  @param time Database column TIME SqlType(BIGINT)
+    *  @param like Database column LIKE SqlType(INTEGER) */
+  case class rRecordInfo(id: Int, author: String, content: String, time: Long, like: Int)
   /** GetResult implicit for fetching rRecordInfo objects using plain SQL queries */
   implicit def GetResultrRecordInfo(implicit e0: GR[Int], e1: GR[String], e2: GR[Long]): GR[rRecordInfo] = GR{
     prs => import prs._
-      rRecordInfo.tupled((<<[Int], <<[String], <<[String], <<[Long]))
+      rRecordInfo.tupled((<<[Int], <<[String], <<[String], <<[Long], <<[Int]))
   }
   /** Table description of table RECORD_INFO. Objects of this class serve as prototypes for rows in queries. */
   class tRecordInfo(_tableTag: Tag) extends profile.api.Table[rRecordInfo](_tableTag, "RECORD_INFO") {
-    def * = (id, author, content, time) <> (rRecordInfo.tupled, rRecordInfo.unapply)
+    def * = (id, author, content, time, like) <> (rRecordInfo.tupled, rRecordInfo.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = ((Rep.Some(id), Rep.Some(author), Rep.Some(content), Rep.Some(time))).shaped.<>({r=>import r._; _1.map(_=> rRecordInfo.tupled((_1.get, _2.get, _3.get, _4.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = ((Rep.Some(id), Rep.Some(author), Rep.Some(content), Rep.Some(time), Rep.Some(like))).shaped.<>({r=>import r._; _1.map(_=> rRecordInfo.tupled((_1.get, _2.get, _3.get, _4.get, _5.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column ID SqlType(INTEGER), AutoInc, PrimaryKey */
     val id: Rep[Int] = column[Int]("ID", O.AutoInc, O.PrimaryKey)
@@ -73,6 +100,8 @@ trait SlickTables {
     val content: Rep[String] = column[String]("CONTENT", O.Length(1023,varying=true))
     /** Database column TIME SqlType(BIGINT) */
     val time: Rep[Long] = column[Long]("TIME")
+    /** Database column LIKE SqlType(INTEGER) */
+    val like: Rep[Int] = column[Int]("LIKE")
   }
   /** Collection-like TableQuery object for table tRecordInfo */
   lazy val tRecordInfo = new TableQuery(tag => new tRecordInfo(tag))

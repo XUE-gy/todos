@@ -7,7 +7,13 @@ import slick.jdbc.PostgresProfile.api._
 import sun.security.util.Password
 
 import scala.collection.mutable
-import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+
+import scala.concurrent.{Await, Future}
+
+//import scala.slick.jdbc.{GetResult, StaticQuery => Q}
+//import scala.slick.jdbc.JdbcBackend.Database
+//import Q.interpolation
 
 /**
   * User: sky
@@ -70,6 +76,57 @@ object ToDoListDAO{
     }
   }
 
+  def getFollowList(followed: String, follower: String): Future[Seq[rFollowInfo]] = {//获取唯一关注
+    try {
+//      db.run(tFollowInfo.filter(t => (t.followed,t.follower)==(followed,follower)).result)
+      db.run(tFollowInfo.filter(t => t.followed===followed).filter(t=>t.follower===follower).result)
+    } catch {
+      case e: Throwable =>
+        log.error(s"get AuthorList error with error $e")
+        Future.successful(Nil)
+    }
+  }
+
+  def addFollowList(followed: String, follower: String): Future[Int] = {
+    try {
+
+        db.run(tFollowInfo.map(t => (t.followed,t.follower)) += (followed,follower))
+
+    } catch {
+      case e: Throwable =>
+        log.error(s"add record error with error $e")
+        Future.successful(-1)
+    }
+  }
+
+  def getFollowList(follower: String): Future[Seq[rFollowInfo]] = {//获取关注列表
+    try {
+      //      db.run(tFollowInfo.filter(t => (t.followed,t.follower)==(followed,follower)).result)
+      db.run(tFollowInfo.filter(t => t.follower===follower).result)
+    } catch {
+      case e: Throwable =>
+        log.error(s"get AuthorList error with error $e")
+        Future.successful(Nil)
+    }
+  }
+
+  def addLike(id: Int,like: Int): Future[Int] = {
+    try {
+//      db.run(tRecordInfo.map(t => t.id ===id).filter(t => t.))
+      db.run(
+        tRecordInfo.filter(t => t.id===id).map(_.like).update(like+1)
+      )
+//      db.run(tFollowInfo.map)
+//      sql"""select * from RECORD_INFO where ID = ${id}"""
+
+
+    } catch {
+      case e: Throwable =>
+        log.error(s"add record error with error $e")
+        Future.successful(-1)
+    }
+  }
+
 
 
 
@@ -83,7 +140,7 @@ object ToDoListDAO{
         log.error(s"empty content")
         Future.successful(-1)
       } else {
-        db.run(tRecordInfo.map(t => (t.author, t.content, t.time)) += (author, content, System.currentTimeMillis()))
+        db.run(tRecordInfo.map(t => (t.author, t.content, t.time, t.like)) += (author, content, System.currentTimeMillis(),0))
       }
     } catch {
       case e: Throwable =>
@@ -164,5 +221,15 @@ object ToDoListDAO{
         Future.successful(-1)
     }
   }
+  def getRecentList(): Future[Seq[rRecordInfo]] = {//获取了相应author的博客
+    try {
+      db.run(tRecordInfo.filter(t => t.id >= 300).result)
+    } catch {
+      case e: Throwable =>
+        log.error(s"get recordList error with error $e")
+        Future.successful(Nil)
+    }
+  }
+
 
 }

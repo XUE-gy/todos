@@ -7,7 +7,8 @@ import akka.util.Timeout
 import com.neo.sk.todos2018.Boot.executor
 import com.neo.sk.todos2018.models.dao.ToDoListDAO
 import com.neo.sk.todos2018.ptcl.Protocols.parseError
-import com.neo.sk.todos2018.shared.ptcl.ToDoListProtocol.{AddRecordReq, DelRecordReq, GetListRsp, TaskRecord}
+import com.neo.sk.todos2018.shared.ptcl.ToDoListProtocol.{AddRecordReq, DelRecordReq}
+import com.neo.sk.todos2018.shared.ptcl.VisitProtocol.{GetListRsp,TaskFollow,GetListRsp2,getFollowedReq,TaskRecord}
 import com.neo.sk.todos2018.shared.ptcl.{ErrorRsp, SuccessRsp}
 import org.slf4j.LoggerFactory
 
@@ -74,20 +75,37 @@ trait VisitService extends ServiceUtils with SessionBase {
     }
   }
 
-  private val getList = (path("getList") & get) {
+  private val getList = (path("getList") & post) {
+
+    entity(as[Either[Error, getFollowedReq]]) {
+      case Left(error) =>
+        log.warn(s"some error: $error")
+        complete(parseError)
+      case Right(req) =>
+        dealFutureResult(
+          ToDoListDAO.getRecordList(req.followed).map { list =>
+            val data = list.map(r => TaskRecord(r.id, r.content, r.time, r.like)).toList
+            complete(GetListRsp2(Some(data)))
+          }
+        )
+    }
+
+  }
+
+  private val getFollowList = (path("getFollowList") & get) {
     userAuth{ user =>
       dealFutureResult(
-        ToDoListDAO.getRecordList(user.userName).map { list =>
-          val data = list.map( r => TaskRecord(r.id, r.content, r.time)).toList
+        ToDoListDAO.getFollowList(user.userName).map { list =>
+          val data = list.map( r => TaskFollow(r.followed,r.follower)).toList
           complete(GetListRsp(Some(data)))
         }
       )
     }
   }
 
-  val listRoutes: Route =
-    pathPrefix("list") {
-      addRecord ~ delRecord ~ getList
+  val visitRoutes: Route =
+    pathPrefix("visit") {
+      addRecord ~ delRecord  ~ getFollowList ~ getList
     }
 
 }

@@ -23,6 +23,7 @@ object ToDoListProtocol {
     id: Int,
     content: String,
     time: Long,
+    like: Int
   )
   case class GetListRsp(
     list: Option[List[TaskRecord]],
